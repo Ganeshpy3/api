@@ -11,6 +11,6 @@ app.get("/get",(req,res)=>{
     res.send(data);
 })
 
-app.listen(port,()=>{
+app.listen(port,"0.0.0.0",()=>{
     console.log(`running on ${port}`)
 })
