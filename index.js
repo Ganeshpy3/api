@@ -1,7 +1,18 @@
 const express = require("express");
 const app = express();
-const data = require("./data.json")
+const data = require("./data.json");
+const {findRecord} = require("./db");
 
+const { MongoClient, ServerApiVersion } = require("mongodb");
+const uri =
+  "mongodb+srv://root:6m3vFT2dYDEWAXBF@db.u7h1jzi.mongodb.net/?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { serverApi: ServerApiVersion.v1 });
+
+client.connect().then( ()=>{
+    console.log("Connected");
+}).catch((e) =>{ 
+    console.log("Error");
+})
 let port = process.env.PORT || 3000
 
 app.get("/",(req,res) =>{
@@ -9,6 +20,18 @@ app.get("/",(req,res) =>{
 })
 app.get("/get",(req,res)=>{
     res.send(data);
+})
+
+app.get("/new",(req,res)=>{
+    try{
+        findRecord(client,"sample_analytics","customers",{}).then(data =>{
+                    res.send(data);
+                })
+    }
+    catch(e){
+        res.send(e);
+    }
+
 })
 
 app.listen(port,"0.0.0.0",()=>{
