@@ -25,7 +25,7 @@ app.get("/get",(req,res)=>{
 app.get("/new",(req,res)=>{
     try{
         findRecord(client,"sample_analytics","customers",{}).then(data =>{
-                    res.send(data);
+                    res.status(200).send(data);
                 })
     }
     catch(e){
