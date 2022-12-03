@@ -1,29 +1,4 @@
-// const { MongoClient, ServerApiVersion } = require("mongodb");
-// const uri =
-//   "mongodb+srv://root:6m3vFT2dYDEWAXBF@db.u7h1jzi.mongodb.net/?retryWrites=true&w=majority";
-// const client = new MongoClient(uri, { serverApi: ServerApiVersion.v1 });
 
-
-// async function run() {
-//   try {
-//     // Connect the client to the server (optional starting in v4.7)
-//     await client.connect();
-//     // Establish and verify connection
-//     await client.db("sample_airbnb").listCollections();
-//     console.log("Connected successfully to server");
-//     const cursor =await client.db("sample_airbnb").listCollections();
-
-//     const a = await client.db("sample_airbnb").collection("listingsAndReviews").find({});
-//     await a.forEach(doc => console.log(doc));
-
-//   await cursor.forEach(doc => console.log(doc));
-
-//   } finally {
-//     // Ensures that the client will close when you finish/error
-//     await client.close();
-//   }
-// }
-// run().catch(console.dir);
 
 const getCollectionList = async function(client,dbName){
 
@@ -66,24 +41,33 @@ const findRecord = async function(client,dbName,collectionName,queryObj){
 
 }
 
-// try{
-//     client.connect().then( ()=>{
-//         console.log("Connected");
-//     })
-//     // getCollectionList(client,"sample_airbnb").then(data=>{
-//     //     console.log(data);
-//     // });
+const createUser = function(client,newUser){
+    return new Promise(function (resolve,reject){
+        var obj= {"EMAIL":"test@gmail.com","PASSWORD":"32","Added_Time":new Date()};
+        client.db("accounts").collection("IAM").insertOne(obj).then( res =>{
+            resolve(res)
+        }).catch(e =>{
+            reject(e)
+        })
+    })
+}
 
-//     findRecord(client,"sample_analytics","customers",{}).then(data =>{
-//         console.log(data);
-//     })
-
-// }
-// catch(e){
-//     console.log("Error in connections",e);
-// }
+const findUser = function(client){
+    return new Promise(function (resolve,reject){
+        client.db("accounts").collection("IAM").findOne({"EMAIL":"test@gmsail.com"}).then( res =>{
+            if(!res){
+                resolve(true)
+            }
+            resolve(false)
+        }).catch(e =>{
+            reject(e)
+        })
+    })
+}
 
 module.exports = {
-    "findRecord":findRecord
+    "findRecord":findRecord,
+    "createUser":createUser,
+    "findUser" : findUser
 
 }
